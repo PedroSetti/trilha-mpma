@@ -1,0 +1,8 @@
+html[data-screen-gestures=true] main,html[data-screen-gestures=true] #lesson-content{touch-action:manipulation}
+#screen-dim{position:fixed!important;inset:0!important;margin:0!important;width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;padding:0!important;border:0!important;border-radius:0!important;background:#000!important;color:#aeb7b2!important;overflow:hidden!important;touch-action:manipulation;user-select:none;overscroll-behavior:contain;box-sizing:border-box}
+#screen-dim::backdrop{background:#000!important}
+#screen-dim .dim-instructions{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));left:20px;right:20px;text-align:center;font:13px Arial,sans-serif}
+#screen-dim .dim-instructions p{font-size:13px;color:#aeb7b2}
+#screen-wake{background:#000!important;color:#bac4bd!important;border:1px solid #45504a!important;border-radius:10px;padding:12px 18px;font:13px Arial,sans-serif}
+#screen-wake:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.screen-dim-settings{border-top:1px solid var(--line);margin-top:24px;padding-top:16px}.screen-dim-settings h3{font-size:17px}.screen-dim-settings p{font-size:13px;line-height:1.8}
