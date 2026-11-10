@@ -16,3 +16,5 @@ html[data-reading=true] body::after{content:'';position:fixed;inset:0;z-index:10
 body.booting>aside,body.booting>main{visibility:hidden}#app-loading{position:fixed;inset:0;display:grid;place-items:center;background:#f5f6f0;color:#204d40;font:600 20px Arial;z-index:9999}
 
 #password-admin-dialog{max-width:650px;width:94%}#password-admin-dialog .message small{display:block;margin:8px 0}aside{overflow-y:auto}#lesson .topic-art{background-size:100% 100%}
+
+html[data-theme=dark] :is(.quiz-panel,.topic-group,.video-fallback){background:var(--surface);color:var(--ink);border-color:var(--line)}html[data-theme=dark] :is(.deadline,.quiz-option.chosen,.quiz-map .answered){background:var(--surface-soft);color:var(--ink);border-color:var(--line)}html[data-theme=dark] :is(.deadline p,.topic-group p,.topic-group li,.quiz-category,.quiz-score){color:var(--muted)}.topic-art{opacity:calc(var(--topic-image-opacity) * 3.5)}html[data-reading=true] .topic-art{opacity:calc(var(--topic-image-opacity) * 2)}#content .quiz-prompt{font-size:calc(19px * var(--study-font))}
