@@ -1,0 +1,13 @@
+.private/
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+*.jks
+*.keystore
+android/local.properties
+android/.gradle/
+android/**/build/
+frontend/dist/
+frontend/*.zip

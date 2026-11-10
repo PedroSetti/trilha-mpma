@@ -26,6 +26,10 @@ shutil.copytree(root/'server/study',out/'study',dirs_exist_ok=True)
 /study/index.html
   Cache-Control: no-cache
 ''',encoding='utf-8')
+apk=root/'android/releases/Trilha-Concursos-1.0.0.apk'
+if apk.exists():
+ (out/'downloads').mkdir(exist_ok=True)
+ shutil.copy2(apk,out/'downloads'/apk.name)
 with zipfile.ZipFile(root/'frontend/trilha-netlify.zip','w',zipfile.ZIP_DEFLATED) as z:
  for p in out.rglob('*'):
   if p.is_file():z.write(p,p.relative_to(out).as_posix())
