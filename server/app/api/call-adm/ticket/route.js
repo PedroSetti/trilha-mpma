@@ -1,0 +1,4 @@
+import {auth} from '../../../../lib/auth';
+import {createSupportTicket} from '../../../../lib/support-ticket';
+export const dynamic='force-dynamic';
+export async function POST(request){const origin=request.headers.get('origin');if(!['https://trilha-concursos-pedro.netlify.app','https://trilha-concursos-pedro.onrender.com',...(request.headers.get('host')==='localhost:3000'?['http://localhost:3000']:[])].includes(origin))return Response.json({error:'Origem inválida.'},{status:403});const {data}=await auth.getSession();if(!data?.user)return Response.json({error:'Entre na sua conta.'},{status:401});return Response.json({ticket:createSupportTicket(data.user),url:'https://trilha-concursos-pedro.onrender.com/api/support-live/',expiresIn:60},{headers:{'Cache-Control':'private,no-store'}})}

@@ -1,0 +1,5 @@
+import {createHmac,randomBytes,timingSafeEqual} from 'node:crypto';
+const audience='trilha-call-adm';
+const secret=()=>process.env.NEON_AUTH_COOKIE_SECRET;
+export function createSupportTicket(user){const payload=Buffer.from(JSON.stringify({aud:audience,sub:user.id,name:user.name,exp:Math.floor(Date.now()/1000)+60,nonce:randomBytes(16).toString('hex')})).toString('base64url');return payload+'.'+createHmac('sha256',secret()).update(payload).digest('base64url')}
+export function verifySupportTicket(token){try{if(typeof token!=='string'||token.length>2000)return null;const parts=token.split('.');if(parts.length!==2)return null;const expected=createHmac('sha256',secret()).update(parts[0]).digest();const actual=Buffer.from(parts[1],'base64url');if(actual.length!==expected.length||!timingSafeEqual(actual,expected))return null;const data=JSON.parse(Buffer.from(parts[0],'base64url').toString('utf8'));if(data.aud!==audience||typeof data.sub!=='string'||!Number.isInteger(data.exp)||data.exp<=Date.now()/1000||data.exp>Date.now()/1000+65)return null;return {id:data.sub,name:data.name}}catch{return null}}
