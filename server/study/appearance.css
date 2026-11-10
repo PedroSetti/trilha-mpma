@@ -14,3 +14,5 @@ html[data-reading=true] body::after{content:'';position:fixed;inset:0;z-index:10
 @media(prefers-reduced-motion:no-preference){body,dialog,aside{transition:background-color .2s,color .2s}}
 
 body.booting>aside,body.booting>main{visibility:hidden}#app-loading{position:fixed;inset:0;display:grid;place-items:center;background:#f5f6f0;color:#204d40;font:600 20px Arial;z-index:9999}
+
+#password-admin-dialog{max-width:650px;width:94%}#password-admin-dialog .message small{display:block;margin:8px 0}aside{overflow-y:auto}#lesson .topic-art{background-size:100% 100%}
