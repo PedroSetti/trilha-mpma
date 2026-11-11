@@ -1,0 +1,8 @@
+const LANGUAGE_VIDEOS={
+ingles:[{id:'S45kHeWnT0M',title:'Inglês para iniciantes · Nível 0, aula 1',by:'ABC Fluent · apoio básico em português',verifiedAt:'2026-11-11'},{id:'RmQH6B9P8r8',title:'Inversão e condicionais reduzidas · aprofundamento',by:'BBC Learning English · aula em inglês',verifiedAt:'2026-11-11'}],
+espanhol:[{id:'GLlM7p8VFUE',title:'Hola I · apresentação e cumprimentos',by:'KULTIVI seu ESPANHOL · apoio básico',verifiedAt:'2026-11-11'},{id:'eREVUGpS2pg',title:'Sentirse Bien I · módulo avançado',by:'KULTIVI seu ESPANHOL · prática e aprofundamento',verifiedAt:'2026-11-11'}],
+italiano:[{id:'4d74o8mq5Qc',title:'Pronuncia · introdução à pronúncia italiana',by:'Kultivi · apoio básico',verifiedAt:'2026-11-11'},{id:'sWbWiTJUlrQ',title:'Periodo ipotetico · congiuntivo e condizionale',by:'Italiano più · aprofundamento em italiano',verifiedAt:'2026-11-11'}],
+japones:[{id:'63QyBSPVgkI',title:'Aula de japonês básico',by:'Déborah Hudz · apoio básico em português',verifiedAt:'2026-11-11'},{id:'K-9CGqDWI2c',title:'Forma causativa, expressões e kanji',by:'NihonGO · aprofundamento em português',verifiedAt:'2026-11-11'}],
+chines:[{id:'ejYM-t65Y_Y',title:'Aprender chinês do zero · introdução ao mandarim',by:'China Tongue Joana · apoio básico em português',verifiedAt:'2026-11-11'},{id:'2fFYObYJG1k',title:'Chinese Word Order · organização da frase',by:'Yoyo Chinese · revisão de estrutura em inglês',verifiedAt:'2026-11-11'},{id:'XbY2bNpYd6g',title:'Complement of direction · introdução aos complementos',by:'Yoyo Chinese · aprofundamento em inglês',verifiedAt:'2026-11-11'}]
+};
+function languageVideoList(lesson){const list=LANGUAGE_VIDEOS[lesson.courseId];return lesson.stage===2?[...list.slice(1),list[0]]:list}
