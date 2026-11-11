@@ -1,3 +1,4 @@
+import {MASTER_USER_ID} from './admin-role';
 import {supportEvents} from './support-events';
 import {supportMessage} from './support-access';
 export function supportStreamResponse({user,admin,sql,signal}){
@@ -6,10 +7,11 @@ export function supportStreamResponse({user,admin,sql,signal}){
   let active=true,lastId=null,checking=false;
   const send=(event,value,id)=>{if(active)controller.enqueue(encoder.encode(`${id?`id: ${id}\n`:''}event: ${event}\ndata: ${JSON.stringify(value)}\n\n`))};
   const onMessage=message=>{if(admin||message.threadUserId===user.id)send('message',message,message.id)};
-  supportEvents.on('message',onMessage);const onRead=event=>{if(event.userId===user.id)send('notifications',{})};supportEvents.on('notifications',onRead);
+  supportEvents.on('message',onMessage);const onRead=event=>{if(event.userId===user.id)send('notifications',{})};supportEvents.on('notifications',onRead);const onRole=event=>{if(event.userId===user.id){send('role-change',{});cleanup();try{controller.close()}catch{}}};supportEvents.on('role-change',onRole);
   const poll=async()=>{
    if(!active||checking)return;checking=true;
    try{
+    if(admin&&user.id!==MASTER_USER_ID){const roles=await sql`SELECT user_id FROM study_admins WHERE user_id=${user.id}`;if(!active)return;if(!roles.length){onRole({userId:user.id});return}}
     if(lastId===null){
      const [row]=admin?await sql`SELECT coalesce(max(id),0)::text AS latest FROM study_messages`:await sql`SELECT coalesce(max(id),0)::text AS latest FROM study_messages WHERE thread_user_id=${user.id}`;
      if(!active)return;lastId=row.latest;send('ready',{latestId:lastId});
@@ -25,7 +27,7 @@ export function supportStreamResponse({user,admin,sql,signal}){
   // Direct Render streams do not need the former 20-second proxy cutoff.
   const timeout=setTimeout(()=>{cleanup();try{controller.close()}catch{}},240000);
   const abort=()=>{cleanup();try{controller.close()}catch{}};
-  cleanup=()=>{if(!active)return;active=false;clearInterval(interval);clearInterval(heartbeat);clearTimeout(timeout);supportEvents.off('message',onMessage);supportEvents.off('notifications',onRead);signal.removeEventListener('abort',abort)};
+  cleanup=()=>{if(!active)return;active=false;clearInterval(interval);clearInterval(heartbeat);clearTimeout(timeout);supportEvents.off('message',onMessage);supportEvents.off('notifications',onRead);supportEvents.off('role-change',onRole);signal.removeEventListener('abort',abort)};
   signal.addEventListener('abort',abort,{once:true});controller.enqueue(encoder.encode('retry: 1000\n\n'));if(signal.aborted)abort();else poll();
  },cancel(){cleanup()}});
  return new Response(stream,{headers:{'Content-Type':'text/event-stream; charset=utf-8','Cache-Control':'private, no-cache, no-store, no-transform','X-Accel-Buffering':'no'}});
