@@ -1,4 +1,7 @@
 const learningSources={
+ penal:['Código Penal — texto atualizado na Câmara dos Deputados','https://www2.camara.leg.br/legin/fed/declei/1940-1949/decreto-lei-2848-7-dezembro-1940-412868-normaatualizada-pe.html'],
+ civil:['Código Civil — Câmara dos Deputados','https://www2.camara.leg.br/legin/fed/lei/2002/lei-10406-10-janeiro-2002-432893-norma-pl.html'],
+ cpc:['Código de Processo Civil — Câmara dos Deputados','https://www2.camara.leg.br/legin/fed/lei/2015/lei-13105-16-marco-2015-780273-norma-pl.html'],
  publicManagement:['Gestão pública e capacitação — Escola Virtual de Governo','https://www.escolavirtual.gov.br/catalogo'],
  procurement:['Licitações e contratos — Portal de Compras do Governo Federal','https://www.gov.br/compras/pt-br/nllc'],
  budget:['Manuais de contabilidade e orçamento — Tesouro Nacional','https://www.gov.br/tesouronacional/pt-br/contabilidade-e-custos/manuais'],
@@ -43,6 +46,9 @@ function teachingTheme(chapter){const s=String(chapter.category+' '+chapter.titl
  if(/transito|rodovi/.test(s))return {photo:'city',diagram:'road',sources:['traffic','prf'],labels:['Conduta e contexto','Regra aplicável','Competência e processo']};
  if(/policia civil|lei 6.107/.test(s))return {photo:'law',diagram:'law',sources:['pc','constitution'],labels:['Constituição','Lei estadual','Procedimento aplicável']};
  if(/ministerio publico|mp-ma/.test(s))return {photo:'law',diagram:'law',sources:['mp','constitution','law'],labels:['Constituição','Norma orgânica','Atribuição do órgão']};
+ if(/direito processual civil/.test(s))return {photo:'law',diagram:'law',sources:['cpc','constitution'],labels:['Competência e procedimento','Prova e contraditório','Decisão e controle']};
+ if(/direito civil/.test(s))return {photo:'law',diagram:'law',sources:['civil','law'],labels:['Sujeitos e direitos','Fato e negócio jurídico','Efeitos e responsabilidade']};
+ if(/direito penal/.test(s))return {photo:'law',diagram:'law',sources:['penal','constitution'],labels:['Conduta e tipo legal','Requisitos do delito','Consequência jurídica']};
  if(/direito|legislacao|guarda|criminolog|etica/.test(s))return {photo:'law',diagram:'law',sources:['constitution','law'],labels:['Fato e norma','Requisitos e limites','Conclusão fundamentada']};
  if(/direitos humanos|protecao social|relacoes humanas/.test(s))return {photo:'books',diagram:'people',sources:['rights','constitution'],labels:['Pessoa e necessidade','Direitos e barreiras','Atendimento respeitoso']};
  if(/arquiv/.test(s))return {photo:'books',diagram:'archive',sources:['archive'],labels:['Produção e contexto','Tramitação e avaliação','Guarda ou destinação']};

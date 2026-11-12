@@ -6,8 +6,8 @@ export const dynamic='force-dynamic';
 export async function GET(request){
  const c=await supportContext();if(!c)return Response.json({error:'Entre na sua conta.'},{status:401});const {sql,user,admin}=c;
  const target=admin?(new URL(request.url).searchParams.get('user')||user.id):user.id;
- const messagesPromise=sql`SELECT m.id,m.sender_id,m.sender_name,m.from_admin,m.body,m.created_at,a.id AS attachment_id,a.name AS attachment_name,a.mime AS attachment_mime,a.size AS attachment_size FROM (SELECT id,sender_id,sender_name,from_admin,body,created_at FROM study_messages WHERE thread_user_id=${target} ORDER BY id DESC LIMIT 100) m LEFT JOIN study_attachments a ON a.message_id=m.id ORDER BY m.id`;
- const threadsPromise=admin?sql`SELECT DISTINCT ON (m.thread_user_id) m.thread_user_id,u.name AS sender_name,m.body,m.created_at,m.id AS last_message_id FROM study_messages m JOIN neon_auth."user" u ON u.id::text=m.thread_user_id ORDER BY m.thread_user_id,m.id DESC`:Promise.resolve([]);
+ const messagesPromise=sql`SELECT m.id,m.sender_id,m.sender_name,m.from_admin,m.body,m.created_at,d.deleted_at,a.id AS attachment_id,a.name AS attachment_name,a.mime AS attachment_mime,a.size AS attachment_size FROM (SELECT id,sender_id,sender_name,from_admin,body,created_at FROM study_messages WHERE thread_user_id=${target} ORDER BY id DESC LIMIT 100) m LEFT JOIN study_message_deletions d ON d.message_id=m.id LEFT JOIN study_attachments a ON a.message_id=m.id AND d.message_id IS NULL ORDER BY m.id`;
+ const threadsPromise=admin?sql`SELECT DISTINCT ON (m.thread_user_id) m.thread_user_id,u.name AS sender_name,CASE WHEN d.message_id IS NULL THEN m.body ELSE 'Mensagem apagada' END AS body,m.created_at,m.id AS last_message_id,d.deleted_at FROM study_messages m LEFT JOIN study_message_deletions d ON d.message_id=m.id JOIN neon_auth."user" u ON u.id::text=m.thread_user_id ORDER BY m.thread_user_id,m.id DESC`:Promise.resolve([]);
  const [messages,threads]=await Promise.all([messagesPromise,threadsPromise]);return Response.json({admin,target,messages:messages.map(supportMessage),threads},{headers:{'Cache-Control':'private,no-store'}})
 }
 export async function POST(request){
