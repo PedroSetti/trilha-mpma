@@ -1,14 +1,14 @@
 # Trilha Concursos para Android
 
-Aplicativo Android nativo com WebView para a plataforma publicada em https://trilha-concursos-pedro.netlify.app/. Requer Android 8 ou superior e internet. Usa as mesmas contas, progresso, aulas, chat, anexos e notificações internas do site. Atualizações do site aparecem no aplicativo sem gerar novo APK.
+Aplicativo Android nativo com WebView para a plataforma publicada em https://trilha-concursos-pedro.pages.dev/. Requer Android 8 ou superior e internet. Usa as mesmas contas, progresso, aulas, chat, anexos e notificações internas do site. Atualizações do site aparecem no aplicativo sem gerar novo APK.
 
-## Versão inicial
+## Versão 1.0.2
 
 - Pacote: `br.com.pedrosetti.trilhaconcursos`
-- Versão: 1.0.0, código 1
+- Versão: 1.0.2, código 3
 - SDK mínimo 26, alvo 35
-- Permissão: internet
-- Seleção de arquivos pelo seletor do Android; imagens e PDFs são validados no servidor.
+- Permissões: internet e microfone (solicitado somente ao gravar áudio)
+- Seleção de arquivos pelo seletor do Android; imagens, PDFs e áudios são validados no servidor.
 - Downloads autenticados por DownloadManager. Links externos, incluindo o YouTube, abrem no aplicativo apropriado.
 - Notificações de mensagens aparecem dentro do aplicativo. Não há serviço de push para avisar com o aplicativo encerrado.
 - Não inclui senha, token de sessão, chave privada de assinatura ou credencial do banco.

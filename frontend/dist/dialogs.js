@@ -1,0 +1,4 @@
+// Keep a separate, clickable close bar above the content of every dialog.
+function prepareDialogCloseButtons(){document.querySelectorAll('dialog').forEach(dialog=>{const button=dialog.querySelector('button.close');if(!button||button.parentElement.classList.contains('dialog-close-bar'))return;button.type='button';if(!button.getAttribute('aria-label'))button.setAttribute('aria-label','Fechar janela');const bar=document.createElement('div');bar.className='dialog-close-bar';dialog.prepend(bar);bar.append(button)})}
+document.addEventListener('click',event=>{const button=event.target.closest?.('button.close');const dialog=button?.closest('dialog');if(!dialog)return;event.preventDefault();event.stopImmediatePropagation();dialog.close()},true);
+prepareDialogCloseButtons();new MutationObserver(prepareDialogCloseButtons).observe(document.body,{childList:true,subtree:true});

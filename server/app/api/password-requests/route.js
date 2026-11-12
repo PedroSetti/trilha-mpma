@@ -1,7 +1,7 @@
 import {auth} from '../../../lib/auth';
 import {createAuthClient} from '@neon/auth';
 import {neon} from '@neondatabase/serverless';
-const origins=['https://trilha-concursos-pedro.netlify.app','https://trilha-concursos-pedro.onrender.com'];
+const origins=['https://trilha-concursos-pedro.pages.dev','https://trilha-concursos-pedro.netlify.app','https://trilha-concursos-pedro.onrender.com'];
 async function admin(){const {data}=await auth.getSession();if(!data?.user)return null;const sql=neon(process.env.DATABASE_URL);const rows=await sql`SELECT user_id FROM study_admins WHERE user_id=${data.user.id}`;return rows.length?data.user:null}
 export async function GET(){if(!await admin())return Response.json({error:'Acesso restrito.'},{status:403});const sql=neon(process.env.DATABASE_URL);const requests=await sql`SELECT r.id,u.name,r.email,r.requested_at,r.sent_at FROM study_password_requests r JOIN neon_auth."user" u ON u.id::text=r.user_id ORDER BY r.id DESC LIMIT 100`;return Response.json({requests},{headers:{'Cache-Control':'private,no-store'}})}
 export async function POST(request){

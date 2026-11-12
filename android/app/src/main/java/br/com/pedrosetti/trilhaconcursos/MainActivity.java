@@ -3,6 +3,8 @@ package br.com.pedrosetti.trilhaconcursos;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.WindowInsets;
 import android.webkit.CookieManager;
+import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
@@ -27,14 +30,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public final class MainActivity extends Activity {
- private static final String HOME="https://trilha-concursos-pedro.netlify.app/";
+ private static final String HOME="https://trilha-concursos-pedro.pages.dev/";
  private static final int PICK_FILE=201;
+ private static final int RECORD_AUDIO_REQUEST=202;
+ private PermissionRequest microphoneRequest;
  private WebView web;
  private ValueCallback<Uri[]> fileCallback;
  private View fullscreen;
  private WebChromeClient.CustomViewCallback fullscreenCallback;
 
- private boolean trusted(String url){try{Uri uri=Uri.parse(url);return "https".equals(uri.getScheme())&&"trilha-concursos-pedro.netlify.app".equals(uri.getHost())&&(uri.getPort()==-1||uri.getPort()==443)&&uri.getUserInfo()==null;}catch(Exception e){return false;}}
+ private boolean trusted(String url){try{Uri uri=Uri.parse(url);return "https".equals(uri.getScheme())&&("trilha-concursos-pedro.pages.dev".equals(uri.getHost())||"trilha-concursos-pedro.netlify.app".equals(uri.getHost()))&&(uri.getPort()==-1||uri.getPort()==443)&&uri.getUserInfo()==null;}catch(Exception e){return false;}}
  private void external(String url){try{Uri uri=Uri.parse(url);if(!"https".equals(uri.getScheme())&&!"mailto".equals(uri.getScheme()))return;startActivity(new Intent(Intent.ACTION_VIEW,uri));}catch(ActivityNotFoundException e){Toast.makeText(this,"Não há aplicativo disponível para abrir este link.",Toast.LENGTH_SHORT).show();}}
  @SuppressLint("SetJavaScriptEnabled") @Override public void onCreate(Bundle state){
   super.onCreate(state);WebView.setWebContentsDebuggingEnabled(false);
@@ -49,6 +54,8 @@ public final class MainActivity extends Activity {
    @Override public void onPageFinished(WebView view,String url){CookieManager.getInstance().flush();}
   });
   web.setWebChromeClient(new WebChromeClient(){
+   @Override public void onPermissionRequest(PermissionRequest request){runOnUiThread(()->{if(!trusted(request.getOrigin().toString())||request.getResources().length!=1||!PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(request.getResources()[0])){request.deny();return;}if(checkSelfPermission(Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED){request.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});return;}if(microphoneRequest!=null){request.deny();return;}microphoneRequest=request;requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},RECORD_AUDIO_REQUEST);});}
+   @Override public void onPermissionRequestCanceled(PermissionRequest request){runOnUiThread(()->{if(microphoneRequest==request)microphoneRequest=null;});}
    @Override public void onProgressChanged(WebView view,int value){loading.setProgress(value);loading.setVisibility(value==100?View.GONE:View.VISIBLE);}
    @Override public boolean onShowFileChooser(WebView view,ValueCallback<Uri[]> callback,FileChooserParams params){if(fileCallback!=null)fileCallback.onReceiveValue(null);fileCallback=callback;try{Intent intent=params.createIntent();intent.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(intent,PICK_FILE);}catch(ActivityNotFoundException e){fileCallback.onReceiveValue(null);fileCallback=null;Toast.makeText(MainActivity.this,"Não foi possível abrir o seletor de arquivos.",Toast.LENGTH_SHORT).show();}return true;}
    @Override public boolean onCreateWindow(WebView view,boolean dialog,boolean gesture,Message result){if(!gesture)return false;WebView child=new WebView(MainActivity.this);child.setWebViewClient(new WebViewClient(){@Override public void onPageStarted(WebView v,String url,android.graphics.Bitmap icon){v.stopLoading();if(trusted(url))web.loadUrl(url);else external(url);v.destroy();}});((WebView.WebViewTransport)result.obj).setWebView(child);result.sendToTarget();return true;}
@@ -59,7 +66,8 @@ public final class MainActivity extends Activity {
   if(state==null||web.restoreState(state)==null)web.loadUrl(HOME);
  }
  @Override protected void onActivityResult(int request,int result,Intent data){super.onActivityResult(request,result,data);if(request==PICK_FILE&&fileCallback!=null){Uri[] selected=WebChromeClient.FileChooserParams.parseResult(result,data);if(selected!=null){for(Uri uri:selected)if(uri==null||!"content".equals(uri.getScheme())){selected=null;break;}}fileCallback.onReceiveValue(selected);fileCallback=null;}}
+ @Override public void onRequestPermissionsResult(int code,String[] permissions,int[] results){super.onRequestPermissionsResult(code,permissions,results);if(code==RECORD_AUDIO_REQUEST&&microphoneRequest!=null){PermissionRequest request=microphoneRequest;microphoneRequest=null;if(results.length>0&&results[0]==PackageManager.PERMISSION_GRANTED&&trusted(request.getOrigin().toString()))request.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});else request.deny();}}
  @Override public void onBackPressed(){if(fullscreen!=null){web.getWebChromeClient().onHideCustomView();return;}if(web.canGoBack())web.goBack();else super.onBackPressed();}
  @Override protected void onSaveInstanceState(Bundle state){web.saveState(state);super.onSaveInstanceState(state);}
- @Override protected void onDestroy(){if(fileCallback!=null)fileCallback.onReceiveValue(null);if(web!=null){web.stopLoading();web.destroy();}super.onDestroy();}
+ @Override protected void onDestroy(){if(microphoneRequest!=null){microphoneRequest.deny();microphoneRequest=null;}if(fileCallback!=null)fileCallback.onReceiveValue(null);if(web!=null){web.stopLoading();web.destroy();}super.onDestroy();}
 }

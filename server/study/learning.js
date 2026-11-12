@@ -1,4 +1,7 @@
 const learningSources={
+ publicManagement:['Gestão pública e capacitação — Escola Virtual de Governo','https://www.escolavirtual.gov.br/catalogo'],
+ procurement:['Licitações e contratos — Portal de Compras do Governo Federal','https://www.gov.br/compras/pt-br/nllc'],
+ budget:['Manuais de contabilidade e orçamento — Tesouro Nacional','https://www.gov.br/tesouronacional/pt-br/contabilidade-e-custos/manuais'],
  language:['Portal de recursos linguísticos do Senado','https://www12.senado.leg.br/manualdecomunicacao'],
  math:['Portal da Matemática — OBMEP/IMPA','https://portaldaobmep.impa.br/'],
  constitution:['Constituição Federal — Senado','https://www25.senado.leg.br/web/atividade/legislacao/constituicao-federal'],
@@ -28,6 +31,7 @@ const learningSources={
  spanish:['Diccionario — Real Academia Española','https://dle.rae.es/']
 };
 function teachingTheme(chapter){const s=String(chapter.category+' '+chapter.title).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ if(/orcamentaria|orcamento publico|creditos adicionais|receita e despesa publica/.test(s))return {photo:'law',diagram:'management',sources:['budget','constitution'],labels:['Planejar e autorizar','Executar e registrar','Controlar e avaliar']};
  if(/imperatriz/.test(s))return {photo:'city',diagram:'city',sources:['city','law'],labels:['Território e história','Norma municipal','Fonte oficial e data']};
  if(/primeiros socorros/.test(s))return {photo:'health',diagram:'health',sources:['health'],labels:['Cena segura','Ligar 192','Seguir orientação']};
  if(/lingua inglesa/.test(s))return {photo:'books',diagram:'language',sources:['english'],labels:['Texto e contexto','Estrutura da frase','Sentido demonstrável']};
@@ -51,6 +55,8 @@ function teachingTheme(chapter){const s=String(chapter.category+' '+chapter.titl
  if(/nuvem|infraestrutura|devops/.test(s))return {photo:'network',diagram:'cloud',sources:['cloud'],labels:['Usuário e aplicação','Serviço e capacidade','Estado e recuperação']};
  if(/governanca|gestao de ti/.test(s))return {photo:'network',diagram:'management',sources:['governance','services'],labels:['Direcionar e planejar','Executar o serviço','Medir e melhorar']};
  if(/informatica para concursos/.test(s))return {photo:'hardware',diagram:'computer',sources:['office'],labels:['Entrada e conteúdo','Ferramenta e operação','Saída e verificação']};
+ if(/licitacoes e gestao de contratos/.test(s))return {photo:'law',diagram:'management',sources:['procurement','law'],labels:['Planejar a contratação','Acompanhar a execução','Registrar e controlar']};
+ if(/gestao de pessoas|gestao de projetos|materiais e patrimonio/.test(s))return {photo:'books',diagram:'management',sources:['publicManagement','procurement'],labels:['Necessidade e objetivos','Recursos e execução','Evidências e resultado']};
  if(/administracao publica/.test(s))return {photo:'law',diagram:'management',sources:['constitution','law'],labels:['Planejar e organizar','Dirigir e executar','Controlar resultados']};
  if(/programacao|algoritmo|software|interfaces|solid/.test(s))return {photo:'hardware',diagram:'code',sources:['programming','web'],labels:['Entrada e contrato','Regra e implementação','Saída e teste']};
  return {photo:'books',diagram:'book',sources:['law'],labels:['Conceito e contexto','Aplicação do conteúdo','Verificação da resposta']}}

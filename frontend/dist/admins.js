@@ -1,0 +1,17 @@
+if(account.admin){
+ const adminButton=document.createElement('button');adminButton.textContent='⚙ Administradores';document.querySelector('aside nav').append(adminButton);
+ const adminDialog=document.createElement('dialog');adminDialog.id='admins-dialog';document.body.append(adminDialog);
+ async function openAdmins(){
+  adminDialog.innerHTML='<button class="close" aria-label="Fechar administradores">×</button><h2>Administradores</h2><p>Carregando…</p>';if(!adminDialog.open)adminDialog.showModal();
+  try{const response=await fetch('/api/admins/',{cache:'no-store'});if(!response.ok)throw Error();const data=await response.json();
+   adminDialog.innerHTML=`<button class="close" aria-label="Fechar administradores">×</button><span class="eyebrow">${data.master?'ADM MASTER':'ADMINISTRAÇÃO'}</span><h2>Administradores</h2><p>${data.master?'Você pode adicionar administradores e retirar o acesso dos demais. Quem for removido continua com sua conta de aluno e seus estudos.':'Administradores podem atender no Call Adm e adicionar outros administradores. Somente o ADM Master pode remover esse acesso.'}</p><div class="admin-accounts">${data.admins.map(a=>`<article class="admin-account"><div><strong>${esc(a.name)}</strong><small>${esc(a.email)}</small><span class="admin-role">${a.master?'ADM Master':'Administrador'}</span></div>${data.master&&!a.master?`<button type="button" data-remove-admin="${esc(a.user_id)}" data-admin-email="${esc(a.email)}">Remover administrador</button>`:''}</article>`).join('')}</div><form id="add-admin"><label>E-mail do usuário cadastrado<input type="email" name="email" required maxlength="254"></label><button>Adicionar administrador</button></form><p id="admin-status" role="status"></p>`;
+   adminDialog.querySelector('form').onsubmit=async event=>{event.preventDefault();const button=event.currentTarget.querySelector('button');button.disabled=true;try{const res=await fetch('/api/admins/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:new FormData(event.currentTarget).get('email')})});const body=await res.json();if(!res.ok)throw Error(body.error);if(!adminDialog.open)return;await openAdmins();adminDialog.querySelector('#admin-status').textContent='Administrador adicionado.'}catch(error){const status=adminDialog.querySelector('#admin-status');if(status)status.textContent=error.message||'Não foi possível adicionar.';button.disabled=false}};
+   adminDialog.querySelectorAll('[data-remove-admin]').forEach(button=>button.onclick=async()=>{
+    if(!confirm('Remover o acesso administrativo de '+button.dataset.adminEmail+'? A conta continuará como aluno.'))return;
+    button.disabled=true;const status=adminDialog.querySelector('#admin-status');status.textContent='Removendo acesso…';
+    try{const res=await fetch('/api/admins/',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:button.dataset.removeAdmin})});const body=await res.json();if(!res.ok)throw Error(body.error);if(!adminDialog.open)return;await openAdmins();adminDialog.querySelector('#admin-status').textContent=body.message}catch(error){if(adminDialog.open)status.textContent=error.message||'Não foi possível remover.';button.disabled=false}
+   });
+  }catch{if(adminDialog.open)adminDialog.innerHTML='<button class="close" aria-label="Fechar administradores">×</button><h2>Administradores</h2><p>Não foi possível carregar. Feche e tente novamente.</p>'}
+ }
+ adminButton.onclick=openAdmins;
+}
