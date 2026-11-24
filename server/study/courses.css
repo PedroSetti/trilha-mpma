@@ -4,3 +4,18 @@
 .microsoft-learning{margin-bottom:40px}.microsoft-learning>h2{margin-top:10px}.microsoft-learning .scope-tabs{flex-wrap:wrap;gap:8px;margin:20px 0}.microsoft-tile:before{background-image:linear-gradient(0deg,#173e3980,#173e3910),url("photo-network.jpg")}.microsoft-ai:before{background-image:linear-gradient(0deg,#173e3980,#173e3910),url("photo-hardware.jpg")}.microsoft-learning .course-grid{margin:20px 0}.microsoft-learning .card{flex-wrap:wrap}.microsoft-learning .card-body h3{overflow-wrap:anywhere}
 
 .ms-question{margin:12px 0;padding:14px;border:1px solid var(--line,#dce4dc);border-radius:10px}.ms-question summary{cursor:pointer;font-weight:600}.ms-question textarea,#ms-practice-notes{width:100%;box-sizing:border-box}.ms-question input[type=checkbox]{width:auto;display:inline-block;margin-right:8px}.microsoft-learning .course-hours{margin:22px 0}
+
+/* Capas próprias por assunto; idiomas usam as bandeiras. */
+.course-tile:before{height:auto;aspect-ratio:9/4;background-color:#142b3a;background-size:cover;background-position:center}
+.course-redes:before,.microsoft-redes:before{background-image:url("course-art/redes.svg")}
+.course-hardware:before,.microsoft-hardware:before{background-image:url("course-art/hardware.svg")}
+.course-basica:before,.microsoft-basica:before{background-image:url("course-art/basica.svg")}
+.course-digitacao:before,.microsoft-digitacao:before{background-image:url("course-art/digitacao.svg")}
+.course-ad-deploy:before,.microsoft-ad-deploy:before{background-image:url("course-art/ad-deploy.svg")}
+.course-ad-admin:before,.microsoft-ad-admin:before{background-image:url("course-art/ad-admin.svg")}
+.course-windows-server:before,.microsoft-windows-server:before{background-image:url("course-art/windows-server.svg")}
+.course-m365:before,.microsoft-m365:before{background-image:url("course-art/m365.svg")}
+.course-powershell:before,.microsoft-powershell:before{background-image:url("course-art/powershell.svg")}
+.course-genai:before,.microsoft-genai:before{background-image:url("course-art/genai.svg")}
+.course-agents:before,.microsoft-agents:before{background-image:url("course-art/agents.svg")}
+.course-copilot:before,.microsoft-copilot:before{background-image:url("course-art/copilot.svg")}
